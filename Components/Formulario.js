@@ -7,12 +7,26 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Animated,
+  Alert,
 } from 'react-native';
 import {Picker} from '@react-native-community/picker';
 
-const Formulario = ({busqueda, guardarBusqueda}) => {
+const Formulario = ({busqueda, guardarBusqueda, guardarConsultar}) => {
   const {pais, ciudad} = busqueda;
   const [animacionboton] = useState(new Animated.Value(1));
+
+  const consultarClima = () => {
+    if (pais.trim() === '' || ciudad.trim() === '') {
+      mostrarAlerta();
+      return;
+    }
+    guardarConsultar(true);
+  };
+  const mostrarAlerta = () => {
+    Alert.alert('Error', 'Agrega una ciudad y pais para la búsqueda.', [
+      {text: 'Entendido'},
+    ]);
+  };
 
   const animacionEntrada = () => {
     Animated.spring(animacionboton, {
@@ -60,7 +74,8 @@ const Formulario = ({busqueda, guardarBusqueda}) => {
         </View>
         <TouchableWithoutFeedback
           onPressIn={() => animacionEntrada()}
-          onPressOut={() => animacionSalida()}>
+          onPressOut={() => animacionSalida()}
+          onPress={() => consultarClima()}>
           <Animated.View style={[styles.btnBuscar, estiloAnimacion]}>
             <Text style={styles.textoBuscar}>Buscar Clima</Text>
           </Animated.View>
